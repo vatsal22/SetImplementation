@@ -52,12 +52,24 @@ void Set::operator=(const Set& s) {
 }
 
 Set::Set() {
+  _numElements = 0;
 }
 
 Set::Set(const Set& s) {
+  _numElements = s._numElements;
+  _tupleArraySize = s._tupleArraySize;
+  
+  _pTuples = new Tuples[_numElements];
+
+  for (int i=0;i<_numElements;++i){
+    _pTuples[i] = s._pTuples[i];
+  }
+
 }
 
 Set::Set(const int numElements, const int data[]) {
+  //TODO finish the constructors, finish operator<<, ???, profit
+
 }
 
 Set::Set(const int numElements, const Tuple tuples[]) {
