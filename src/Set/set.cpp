@@ -25,9 +25,70 @@ int Set::cardinality() const {
   return 0;
 }
 
+
 Set Set::union_(const Set& s) const {
   SET_INVARIANT("Set::union_()");
-  return emptySet;
+
+  if (_numElements==0 && s._numElements==0){
+    return emptySet;
+  }else if(_numElements==0){
+    return Set(s);
+  }else if(s._numElements==0){
+    return Set(*this);
+  }
+
+  int newNumElements = _numElements + s._numElements;
+
+  Tuple newTuples [newNumElements];
+  
+  for (int i=0;i<_numElements;++i){
+    newTuples[i]=_pTuples[i];
+  }
+  for (int i=0;i<s._numElements;i++){
+    newTuples[i+_numElements] = s._pTuples[i];
+  }
+
+
+
+  int removeList[newNumElements-1] = {0};
+  int numOfRejects = 0;
+  for (int x=0;x<newNumElements-1;x++){
+
+    for (int y=x+1;y<newNumElements;y++){
+     
+      if(newTuples[x] == newTuples[y]){
+        removeList[numOfRejects]=y;
+        numOfRejects++;
+      }
+
+     }
+
+  }
+
+  Tuple uniqueTuples [newNumElements-numOfRejects];
+  int uniqueTuplesIndex = 0;
+
+  for (int i=0;i<newNumElements;i++){
+    bool isReject = false;
+    for(int z = 0; z < numOfRejects; z++){
+     if(removeList[z] == i){
+      isReject = true;  
+      break;
+     }
+    }
+    if (!isReject){
+       uniqueTuples[uniqueTuplesIndex] = newTuples[i];
+       uniqueTuplesIndex++;
+    } 
+  }
+
+  return Set(uniqueTuplesIndex, uniqueTuples);
+
+
+
+  //Remove duplicates
+
+  //
 }
 
 Set Set::intersection(const Set& s) const {
