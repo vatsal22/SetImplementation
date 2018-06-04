@@ -24,6 +24,7 @@ bool equals(const Tuple& t) {
 }
 
 int main() {
+
   Set s1;                              // Create an empty set
   int data[] = { 222, 111, 333 };
   Set s2(3, data);                     // Create a set of three unary tuples
