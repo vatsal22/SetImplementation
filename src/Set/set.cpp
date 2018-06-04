@@ -93,7 +93,33 @@ Set Set::union_(const Set& s) const {
 
 Set Set::intersection(const Set& s) const {
   SET_INVARIANT("Set::intersection()");
-  return emptySet;
+  if (_numElements==0 || s._numElements==0){
+    return emptySet;
+  }
+
+  int numOfMatches = 0;
+
+  for (int x=0;x<_numElements;x++){
+    for (int y=0;y<s._numElements;y++){
+      if (_pTuples[x] == s._pTuples[y])
+        numOfMatches++;
+    }
+  }
+
+  Tuple newTuples [numOfMatches];
+  int newTuplesIndex = 0;
+
+  for (int x=0;x<_numElements;x++){
+    for (int y=0;y<s._numElements;y++){
+      if (_pTuples[x] == s._pTuples[y]){
+        newTuples[newTuplesIndex]=_pTuples[x];
+        newTuplesIndex++;
+      }
+    }
+  }
+
+  return Set(newTuplesIndex, newTuples);
+
 }
 
 Set Set::difference(const Set& s) const {
