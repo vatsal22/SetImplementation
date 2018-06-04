@@ -31,8 +31,8 @@ int main()
 
   //
   Set s1; // Create an empty set
-  int data[] = {222, 111, 333};
-  Set s2(3, data);           // Create a set of three unary tuples
+  int data[] = {222, 111, 333, 444, 333};
+  Set s2(5, data);           // Create a set of three unary tuples
   Set s3 = s2.cartesian(s2); // This should produce a set of 9 binary tuples
 
   Set s4 = s3.select(&tuple1Large); // This should eliminate all elements from set s3 where the first item in the tuple <= 200

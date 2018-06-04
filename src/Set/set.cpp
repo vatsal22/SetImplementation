@@ -199,6 +199,52 @@ Set::Set(const int numElements, const int data[])
   {
     _pTuples[i] = Tuple(data[i]);
   }
+
+  //
+
+  int removeList[_numElements - 1] = {0};
+  int numOfRejects = 0;
+  for (int x = 0; x < _numElements - 1; x++)
+  {
+
+    for (int y = x + 1; y < _numElements; y++)
+    {
+
+      if (_pTuples[x] == _pTuples[y])
+      {
+        removeList[numOfRejects] = y;
+        numOfRejects++;
+      }
+    }
+  }
+
+  Tuple uniqueTuples[_numElements - numOfRejects];
+  int uniqueTuplesIndex = 0;
+
+  for (int i = 0; i < _numElements; i++)
+  {
+    bool isReject = false;
+    for (int z = 0; z < numOfRejects; z++)
+    {
+      if (removeList[z] == i)
+      {
+        isReject = true;
+        break;
+      }
+    }
+    if (!isReject)
+    {
+      uniqueTuples[uniqueTuplesIndex] = _pTuples[i];
+      uniqueTuplesIndex++;
+    }
+  }
+  _numElements=uniqueTuplesIndex;
+  delete [] _pTuples;
+  _pTuples = new Tuple[_numElements];
+  for (int i=0;i<_numElements;i++){
+    _pTuples[i]=uniqueTuples[i];
+  }
+
 }
 
 Set::Set(const int numElements, const Tuple tuples[])
@@ -218,6 +264,54 @@ Set::Set(const int numElements, const Tuple tuples[])
   {
     _pTuples[i] = Tuple(tuples[i]);
   }
+
+
+//
+
+  int removeList[_numElements - 1] = {0};
+  int numOfRejects = 0;
+  for (int x = 0; x < _numElements - 1; x++)
+  {
+
+    for (int y = x + 1; y < _numElements; y++)
+    {
+
+      if (_pTuples[x] == _pTuples[y])
+      {
+        removeList[numOfRejects] = y;
+        numOfRejects++;
+      }
+    }
+  }
+
+  Tuple uniqueTuples[_numElements - numOfRejects];
+  int uniqueTuplesIndex = 0;
+
+  for (int i = 0; i < _numElements; i++)
+  {
+    bool isReject = false;
+    for (int z = 0; z < numOfRejects; z++)
+    {
+      if (removeList[z] == i)
+      {
+        isReject = true;
+        break;
+      }
+    }
+    if (!isReject)
+    {
+      uniqueTuples[uniqueTuplesIndex] = _pTuples[i];
+      uniqueTuplesIndex++;
+    }
+  }
+  _numElements=uniqueTuplesIndex;
+  delete [] _pTuples;
+  _pTuples = new Tuple[_numElements];
+  for (int i=0;i<_numElements;i++){
+    _pTuples[i]=uniqueTuples[i];
+  }
+  ////
+
 }
 
 Set::~Set()
