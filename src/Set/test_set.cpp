@@ -15,24 +15,27 @@
 using namespace std;
 
 // Example of a selection predicate function
-bool tuple1Large(const Tuple& t) {
+bool tuple1Large(const Tuple &t)
+{
   return (t(1) > 200);
 }
 
-bool equals(const Tuple& t) {
+bool equals(const Tuple &t)
+{
   return (t(1) == t(2));
 }
 
-int main() {
-//
+int main()
+{
+  //
 
-//
-  Set s1;                              // Create an empty set
-  int data[] = { 222, 111, 333 };
-  Set s2(3, data);                     // Create a set of three unary tuples
-  Set s3 = s2.cartesian(s2);           // This should produce a set of 9 binary tuples
+  //
+  Set s1; // Create an empty set
+  int data[] = {222, 111, 333};
+  Set s2(3, data);           // Create a set of three unary tuples
+  Set s3 = s2.cartesian(s2); // This should produce a set of 9 binary tuples
 
-  Set s4 = s3.select(&tuple1Large);    // This should eliminate all elements from set s3 where the first item in the tuple <= 200
+  Set s4 = s3.select(&tuple1Large); // This should eliminate all elements from set s3 where the first item in the tuple <= 200
 
   cout << "s1: " << s1 << endl
        << "s2: " << s2 << endl
@@ -44,11 +47,11 @@ int main() {
   // Test union (with duplicate elimination)
   cout << "s2.union_(s2): " << s2.union_(s2) << endl;
   cout << "s3.union_(s2): " << s3.union_(s2) << endl;
-  
+
   // Test union (with duplicate elimination)
   cout << "s2.intersection((s3.union_(s2))): " << s2.intersection(s3.union_(s2)) << endl;
   cout << "s2.intersection(s2): " << s2.intersection(s2) << endl;
-  
+
   // Test difference (with duplicate elimination)
   cout << "s2.difference((s3.union_(s2))): " << s2.difference(s3.union_(s2)) << endl;
   cout << "(s3.union_(s2)).difference(s2): " << (s3.union_(s2)).difference(s2) << endl;
@@ -61,8 +64,8 @@ int main() {
 #endif
   Set s5 = s3.cartesian(s2);
   cout << "s5: " << s5 << endl;
-  int prj[] = {1,3};
-  cout << "s5.project(2,prj): " << s5.project(2,prj) << endl;
+  int prj[] = {1, 3};
+  cout << "s5.project(2,prj): " << s5.project(2, prj) << endl;
 #if 0
   cout << "s1.cardinality(): " << s1.cardinality() << endl;
   cout << "s1(1): " << s1(1) << endl;
@@ -76,6 +79,6 @@ int main() {
   cout << "s1.cardinality(): " << s1.cardinality() << endl;
   cout << "s1(1): " << s1(1) << endl;
   cout << "s1.project(2,prj): " << s1.project(2,prj) << endl;
-#endif  
+#endif
   return 0;
 }
