@@ -28,9 +28,14 @@ bool equals(const Tuple &t)
 int main()
 {
   //
-
+  Tuple myTuples[2];
+  int array1[5] = {1,2,3,4,5};
+  int array2[1] = {222};
+  myTuples[0] = Tuple(5, array1);
+  myTuples[1] = Tuple(1, array2);
   //
-  Set s1; // Create an empty set
+  Set s1(2, myTuples); // Create an empty set
+
   int data[] = {222, 111, 333, 444, 333};
   Set s2(5, data);           // Create a set of three unary tuples
   Set s3 = s2.cartesian(s2); // This should produce a set of 9 binary tuples
@@ -50,7 +55,7 @@ int main()
 
   // Test union (with duplicate elimination)
   cout << "s2.intersection((s3.union_(s2))): " << s2.intersection(s3.union_(s2)) << endl;
-  cout << "s2.intersection(s2): " << s2.intersection(s2) << endl;
+  cout << "s2.intersection(s1): " << s2.intersection(s1) << endl;
 
   // Test difference (with duplicate elimination)
   cout << "s2.difference((s3.union_(s2))): " << s2.difference(s3.union_(s2)) << endl;

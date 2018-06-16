@@ -201,50 +201,52 @@ Set::Set(const int numElements, const int data[])
   }
 
   //
-
-  int removeList[_numElements - 1] = {0};
-  int numOfRejects = 0;
-  for (int x = 0; x < _numElements - 1; x++)
+  if (_numElements > 1)
   {
-
-    for (int y = x + 1; y < _numElements; y++)
+    int removeList[_numElements - 1] = {0};
+    int numOfRejects = 0;
+    for (int x = 0; x < _numElements - 1; x++)
     {
 
-      if (_pTuples[x] == _pTuples[y])
+      for (int y = x + 1; y < _numElements; y++)
       {
-        removeList[numOfRejects] = y;
-        numOfRejects++;
+
+        if (_pTuples[x] == _pTuples[y])
+        {
+          removeList[numOfRejects] = y;
+          numOfRejects++;
+        }
       }
     }
-  }
 
-  Tuple uniqueTuples[_numElements - numOfRejects];
-  int uniqueTuplesIndex = 0;
+    Tuple uniqueTuples[_numElements - numOfRejects];
+    int uniqueTuplesIndex = 0;
 
-  for (int i = 0; i < _numElements; i++)
-  {
-    bool isReject = false;
-    for (int z = 0; z < numOfRejects; z++)
+    for (int i = 0; i < _numElements; i++)
     {
-      if (removeList[z] == i)
+      bool isReject = false;
+      for (int z = 0; z < numOfRejects; z++)
       {
-        isReject = true;
-        break;
+        if (removeList[z] == i)
+        {
+          isReject = true;
+          break;
+        }
+      }
+      if (!isReject)
+      {
+        uniqueTuples[uniqueTuplesIndex] = _pTuples[i];
+        uniqueTuplesIndex++;
       }
     }
-    if (!isReject)
+    _numElements = uniqueTuplesIndex;
+    delete[] _pTuples;
+    _pTuples = new Tuple[_numElements];
+    for (int i = 0; i < _numElements; i++)
     {
-      uniqueTuples[uniqueTuplesIndex] = _pTuples[i];
-      uniqueTuplesIndex++;
+      _pTuples[i] = uniqueTuples[i];
     }
   }
-  _numElements=uniqueTuplesIndex;
-  delete [] _pTuples;
-  _pTuples = new Tuple[_numElements];
-  for (int i=0;i<_numElements;i++){
-    _pTuples[i]=uniqueTuples[i];
-  }
-
 }
 
 Set::Set(const int numElements, const Tuple tuples[])
@@ -264,54 +266,52 @@ Set::Set(const int numElements, const Tuple tuples[])
   {
     _pTuples[i] = Tuple(tuples[i]);
   }
-
-
-//
-
-  int removeList[_numElements - 1] = {0};
-  int numOfRejects = 0;
-  for (int x = 0; x < _numElements - 1; x++)
+  if (_numElements > 1)
   {
-
-    for (int y = x + 1; y < _numElements; y++)
+    int removeList[_numElements - 1] = {0};
+    int numOfRejects = 0;
+    for (int x = 0; x < _numElements - 1; x++)
     {
 
-      if (_pTuples[x] == _pTuples[y])
+      for (int y = x + 1; y < _numElements; y++)
       {
-        removeList[numOfRejects] = y;
-        numOfRejects++;
+
+        if (_pTuples[x] == _pTuples[y])
+        {
+          removeList[numOfRejects] = y;
+          numOfRejects++;
+        }
       }
     }
-  }
 
-  Tuple uniqueTuples[_numElements - numOfRejects];
-  int uniqueTuplesIndex = 0;
+    Tuple uniqueTuples[_numElements - numOfRejects];
+    int uniqueTuplesIndex = 0;
 
-  for (int i = 0; i < _numElements; i++)
-  {
-    bool isReject = false;
-    for (int z = 0; z < numOfRejects; z++)
+    for (int i = 0; i < _numElements; i++)
     {
-      if (removeList[z] == i)
+      bool isReject = false;
+      for (int z = 0; z < numOfRejects; z++)
       {
-        isReject = true;
-        break;
+        if (removeList[z] == i)
+        {
+          isReject = true;
+          break;
+        }
+      }
+      if (!isReject)
+      {
+        uniqueTuples[uniqueTuplesIndex] = _pTuples[i];
+        uniqueTuplesIndex++;
       }
     }
-    if (!isReject)
+    _numElements = uniqueTuplesIndex;
+    delete[] _pTuples;
+    _pTuples = new Tuple[_numElements];
+    for (int i = 0; i < _numElements; i++)
     {
-      uniqueTuples[uniqueTuplesIndex] = _pTuples[i];
-      uniqueTuplesIndex++;
+      _pTuples[i] = uniqueTuples[i];
     }
   }
-  _numElements=uniqueTuplesIndex;
-  delete [] _pTuples;
-  _pTuples = new Tuple[_numElements];
-  for (int i=0;i<_numElements;i++){
-    _pTuples[i]=uniqueTuples[i];
-  }
-  ////
-
 }
 
 Set::~Set()
