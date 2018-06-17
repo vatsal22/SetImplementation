@@ -33,6 +33,7 @@ int Set::cardinality() const
 Set Set::union_(const Set &s) const
 {
   SET_INVARIANT("Set::union_()");
+  if(s._numElements<0 || _numElements<0) return (Set)errorSet;
 
   if (_numElements == 0 && s._numElements == 0)
   {
@@ -60,7 +61,7 @@ Set Set::union_(const Set &s) const
     newTuples[i + _numElements] = s._pTuples[i];
   }
 
-  int removeList[newNumElements - 1] = {0};
+  int removeList[newNumElements - 1];
   int numOfRejects = 0;
   for (int x = 0; x < newNumElements - 1; x++)
   {
@@ -107,6 +108,8 @@ Set Set::union_(const Set &s) const
 Set Set::intersection(const Set &s) const
 {
   SET_INVARIANT("Set::intersection()");
+  if(s._numElements<0 || _numElements<0) return (Set)errorSet;
+
   if (_numElements == 0 || s._numElements == 0)
   {
     return emptySet;
@@ -144,6 +147,8 @@ Set Set::intersection(const Set &s) const
 Set Set::difference(const Set &s) const
 {
   SET_INVARIANT("Set::difference()");
+  if(s._numElements<0 || _numElements<0) return (Set)errorSet;
+
   if (s._numElements == 0)
   {
     return Set(*this);
@@ -196,6 +201,8 @@ Set Set::difference(const Set &s) const
 Set Set::select(predicate *p) const
 {
   SET_INVARIANT("Set::select()");
+  if(_numElements<0) return (Set)errorSet;
+
   Tuple goodTuples[_numElements];
   int goodTuplesIndex = 0;
   for (int i = 0; i < _numElements; i++)
@@ -213,6 +220,7 @@ Set Set::select(predicate *p) const
 Set Set::project(const int numItems, const int items[]) const
 {
   SET_INVARIANT("Set::project()");
+  if(_numElements<0) return (Set)errorSet;
 
   if (numItems < 0)
   {
@@ -231,6 +239,7 @@ Set Set::project(const int numItems, const int items[]) const
 Set Set::cartesian(const Set &s) const
 {
   SET_INVARIANT("Set::cartesian()");
+  if(s._numElements<0 || _numElements<0) return (Set)errorSet;
 
   if (_numElements == 0 || s._numElements == 0)
   {
@@ -252,7 +261,7 @@ Set Set::cartesian(const Set &s) const
 Set Set::operator()(const int item) const
 {
   SET_INVARIANT("Set::operator()()");
-  if (item < 1 || item > _numElements)
+  if (item < 1 || item > _numElements || _numElements < 0)
   {
     return (Set)errorSet;
   }
@@ -263,6 +272,17 @@ Set Set::operator()(const int item) const
 void Set::operator=(const Set &s)
 {
   SET_INVARIANT("Set::operator=()");
+  if (s._numElements < 0)
+  {
+    _numElements = -1;
+    return;
+  }
+  _numElements = s._numElements;
+  _pTuples = new Tuple[_numElements];
+  for (int i = 0; i < _numElements; i++)
+  {
+    _pTuples[i] = s._pTuples[i];
+  }
 }
 
 Set::Set()
@@ -294,11 +314,22 @@ Set::Set(const int numElements, const int data[])
   //
   if (_numElements > 1)
   {
-    int removeList[_numElements - 1] = {0};
+    int removeList[_numElements - 1];
     int numOfRejects = 0;
     for (int x = 0; x < _numElements - 1; x++)
     {
-
+      //
+      bool alreadyFlagged = false;
+      for (int w = 0; w < numOfRejects; w++)
+      {
+        if (x == removeList[w])
+        {
+          alreadyFlagged = true;
+        }
+      }
+      if (alreadyFlagged)
+        continue;
+      //
       for (int y = x + 1; y < _numElements; y++)
       {
 
@@ -359,11 +390,20 @@ Set::Set(const int numElements, const Tuple tuples[])
   }
   if (_numElements > 1)
   {
-    int removeList[_numElements - 1] = {0};
+    int removeList[_numElements - 1];
     int numOfRejects = 0;
     for (int x = 0; x < _numElements - 1; x++)
     {
-
+      bool alreadyFlagged = false;
+      for (int w = 0; w < numOfRejects; w++)
+      {
+        if (x == removeList[w])
+        {
+          alreadyFlagged = true;
+        }
+      }
+      if (alreadyFlagged)
+        continue;
       for (int y = x + 1; y < _numElements; y++)
       {
 
@@ -374,8 +414,13 @@ Set::Set(const int numElements, const Tuple tuples[])
         }
       }
     }
-
+    //int temp[1]={1};
     Tuple uniqueTuples[_numElements - numOfRejects];
+    //std::vector<Tuple> uniqueTuples(_numElements - numOfRejects, Tuple(1, temp));
+    // std::vector<Tuple> uniqueTuples(1,Tuple());
+
+    //uniqueTuples.resize(_numElements - numOfRejects);
+
     int uniqueTuplesIndex = 0;
 
     for (int i = 0; i < _numElements; i++)
