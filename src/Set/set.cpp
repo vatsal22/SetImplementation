@@ -6,6 +6,8 @@
 
 #define SET_INVARIANT(LOC) INVARIANT_TEST(_numElements < -1, LOC)
 
+//TODO: Add if(s._numElements<0 || _numElements<0) return (Set)errorSet;
+
 // Set up an error set to be returned as necessary
 const Set emptySet(0, (int *)0);
 const Set errorSet(-1, (int *)0);
@@ -25,7 +27,7 @@ bool Set::isError() const
 int Set::cardinality() const
 {
   SET_INVARIANT("Set::cardinality()");
-  return 0;
+  return _numElements;
 }
 
 Set Set::union_(const Set &s) const
@@ -142,31 +144,120 @@ Set Set::intersection(const Set &s) const
 Set Set::difference(const Set &s) const
 {
   SET_INVARIANT("Set::difference()");
-  return emptySet;
+  if (s._numElements == 0)
+  {
+    return Set(*this);
+  }
+  if (_numElements == 0)
+  {
+    return emptySet;
+  }
+
+  //int rejects[_numElements] = {0}; //Store index of elements to remove in here
+  int numOfRejects = 0;
+  for (int x = 0; x < _numElements; x++)
+  {
+    for (int y = 0; y < s._numElements; y++)
+    {
+      if (_pTuples[x] == s._pTuples[y])
+      {
+        //      rejects[numOfRejects] = x;
+        numOfRejects++;
+      }
+    }
+  }
+
+  if (numOfRejects == 0)
+  {
+    return Set(*this);
+  }
+
+  Tuple newTuples[_numElements - numOfRejects];
+  int newTuplesIndex = 0;
+  for (int x = 0; x < _numElements; x++)
+  {
+    bool matchFound = false;
+    for (int y = 0; y < s._numElements; y++)
+    {
+      if (_pTuples[x] == s._pTuples[y])
+      {
+        matchFound = true;
+      }
+    }
+    if (!matchFound)
+    {
+      newTuples[newTuplesIndex] = _pTuples[x];
+      newTuplesIndex++;
+    }
+  }
+  return Set(newTuplesIndex, newTuples);
 }
 
 Set Set::select(predicate *p) const
 {
   SET_INVARIANT("Set::select()");
-  return emptySet;
+  Tuple goodTuples[_numElements];
+  int goodTuplesIndex = 0;
+  for (int i = 0; i < _numElements; i++)
+  {
+    if (p(_pTuples[i]))
+    {
+      goodTuples[goodTuplesIndex] = _pTuples[i];
+      goodTuplesIndex++;
+    }
+  }
+
+  return Set(goodTuplesIndex, goodTuples);
 }
 
 Set Set::project(const int numItems, const int items[]) const
 {
   SET_INVARIANT("Set::project()");
-  return emptySet;
+
+  if (numItems < 0)
+  {
+    return (Set)errorSet;
+  }
+  Tuple modifiedTuples[_numElements];
+
+  for (int i = 0; i < _numElements; i++)
+  {
+    modifiedTuples[i] = _pTuples[i].project(numItems, items);
+  }
+
+  return Set(_numElements, modifiedTuples);
 }
 
 Set Set::cartesian(const Set &s) const
 {
   SET_INVARIANT("Set::cartesian()");
-  return emptySet;
+
+  if (_numElements == 0 || s._numElements == 0)
+  {
+    return emptySet;
+  }
+
+  Tuple resultTuples[_numElements * s._numElements];
+
+  for (int x = 0; x < _numElements; x++)
+  {
+    for (int y = 0; y < s._numElements; y++)
+    {
+      resultTuples[s._numElements * x + y + 1] = _pTuples[x] + s._pTuples[y];
+    }
+  }
+  return Set(_numElements * s._numElements, resultTuples);
 }
 
 Set Set::operator()(const int item) const
 {
   SET_INVARIANT("Set::operator()()");
-  return emptySet;
+  if (item < 1 || item > _numElements)
+  {
+    return (Set)errorSet;
+  }
+
+  return Set(1, _pTuples + item - 1);
 }
 
 void Set::operator=(const Set &s)
@@ -331,24 +422,24 @@ std::ostream &operator<<(std::ostream &os, const Set &s)
 
   if (s.isEmpty())
   {
-    os << "()";
+    os << "{}";
     return os;
   }
 
   if (s.isError())
   {
-    os << "(Error Set)";
+    os << "{Error Set}";
     return os;
   }
 
-  os << "(" << s._pTuples[0];
+  os << "{" << s._pTuples[0];
 
   for (int i = 1; i < s._numElements; i++)
   {
     os << ", " << s._pTuples[i];
   }
 
-  os << ")";
+  os << "}";
 
   return os;
 }

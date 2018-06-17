@@ -29,18 +29,20 @@ int main()
 {
   //
   Tuple myTuples[2];
-  int array1[5] = {1,2,3,4,5};
-  int array2[1] = {222};
+  int array1[5] = {201,2,3,4,5};
+  int array2[4] = {201, 17, 4, 8};
   myTuples[0] = Tuple(5, array1);
-  myTuples[1] = Tuple(1, array2);
+  myTuples[1] = Tuple(4, array2);
   //
-  Set s1(2, myTuples); // Create an empty set
-
+  Set s1(2, myTuples); // 
+  cout << "s1(1): " << s1(1)<<endl;
+  Set s10; 
+  cout << "s10: " << s10 <<endl;
   int data[] = {222, 111, 333, 444, 333};
   Set s2(5, data);           // Create a set of three unary tuples
   Set s3 = s2.cartesian(s2); // This should produce a set of 9 binary tuples
 
-  Set s4 = s3.select(&tuple1Large); // This should eliminate all elements from set s3 where the first item in the tuple <= 200
+  Set s4 = s1.select(&tuple1Large); // This should eliminate all elements from set s3 where the first item in the tuple <= 200
 
   cout << "s1: " << s1 << endl
        << "s2: " << s2 << endl
@@ -50,15 +52,15 @@ int main()
        << "s3.select(equals): " << s3.select(&equals) << endl;
 
   // Test union (with duplicate elimination)
-  cout << "s2.union_(s2): " << s2.union_(s2) << endl;
+  cout << "s1.union_(s10): " << s10.union_(s1) << endl;
   cout << "s3.union_(s2): " << s3.union_(s2) << endl;
 
   // Test union (with duplicate elimination)
-  cout << "s2.intersection((s3.union_(s2))): " << s2.intersection(s3.union_(s2)) << endl;
+  cout << "s1.intersection((s1.union_(s2))): " << s1.intersection(s1.union_(s2)) << endl;
   cout << "s2.intersection(s1): " << s2.intersection(s1) << endl;
 
   // Test difference (with duplicate elimination)
-  cout << "s2.difference((s3.union_(s2))): " << s2.difference(s3.union_(s2)) << endl;
+  cout << "s2.difference(s1): " << s2.difference(s1) << endl;
   cout << "(s3.union_(s2)).difference(s2): " << (s3.union_(s2)).difference(s2) << endl;
   cout << "s2.difference(s2): " << s2.difference(s2) << endl;
 
@@ -70,7 +72,7 @@ int main()
   Set s5 = s3.cartesian(s2);
   cout << "s5: " << s5 << endl;
   int prj[] = {1, 3};
-  cout << "s5.project(2,prj): " << s5.project(2, prj) << endl;
+  cout << "s1.project(2,prj): " << s1.project(2, prj) << endl;
 #if 0
   cout << "s1.cardinality(): " << s1.cardinality() << endl;
   cout << "s1(1): " << s1(1) << endl;
