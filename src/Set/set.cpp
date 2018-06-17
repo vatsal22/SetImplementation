@@ -243,7 +243,7 @@ Set Set::cartesian(const Set &s) const
   {
     for (int y = 0; y < s._numElements; y++)
     {
-      resultTuples[s._numElements * x + y + 1] = _pTuples[x] + s._pTuples[y];
+      resultTuples[s._numElements * x + y] = _pTuples[x] + s._pTuples[y];
     }
   }
   return Set(_numElements * s._numElements, resultTuples);
